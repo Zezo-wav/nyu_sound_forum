@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container">
+      <%- include('../partials/flash') %>
+      <h1>All Users</h1>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(u => { %>
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <%- include('../partials/avatar', {name: u.name, size: 'sm'}) %>
+                  <%= u.name %>
+                </div>
+              </td>
+              <td><%= u.email %></td>
+              <td style="text-transform: capitalize;"><%= u.role.replace('_', ' ') %></td>
+              <td><%= new Date(u.created_at).toLocaleDateString() %></td>
+              <td><a href="/users/<%= u.id %>" class="btn btn-sm btn-secondary">View Profile</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      
+      <a href="/admin/dashboard" class="btn btn-secondary" style="margin-top: 24px;">← Back to Dashboard</a>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

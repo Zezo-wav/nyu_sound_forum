@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container">
+      <%- include('../partials/flash') %>
+      <h1>Resolved Questions</h1>
+      <a href="/forum" class="btn btn-secondary mb-3">← Back to Forum</a>
+      
+      <% if (posts.length === 0) { %>
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 40px;">No resolved posts yet.</p>
+      <% } else { %>
+        <% posts.forEach(post => { %>
+          <div class="card">
+            <h3 class="card-title">
+              <a href="/forum/<%= post.id %>"><%= post.title %></a>
+              <span class="badge badge-sm" style="background: var(--text-tertiary); color: white;">✓</span>
+            </h3>
+            <div class="card-meta">
+              <span><%= post.author_name %></span>
+              <span>•</span>
+              <span><%= new Date(post.created_at).toLocaleDateString() %></span>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

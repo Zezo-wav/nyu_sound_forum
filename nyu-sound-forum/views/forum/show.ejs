@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container" style="max-width: 900px;">
+      <%- include('../partials/flash') %>
+      
+      <div class="card">
+        <div class="card-header">
+          <div style="flex: 1;">
+            <h1 class="card-title">
+              <% if (post.is_pinned) { %><span class="status-pinned">📌</span> <% } %>
+              <%= post.title %>
+              <% if (post.is_resolved) { %><span class="badge badge-sm" style="background: var(--text-tertiary); color: white; margin-left: 8px;">✓ Resolved</span><% } %>
+            </h1>
+            <div class="card-meta">
+              <span><%- include('../partials/avatar', {name: post.author_name, size: 'sm'}) %> <%= post.author_name %></span>
+              <span>•</span>
+              <span><%= new Date(post.created_at).toLocaleDateString() %></span>
+              <span>•</span>
+              <span><%= post.category.replace('_', ' ') %></span>
+              <span>•</span>
+              <span>👁️ <%= post.view_count %> views</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-content">
+          <p style="white-space: pre-wrap; color: var(--text-primary);"><%= post.content %></p>
+        </div>
+        
+        <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <% if (user.id === post.posted_by || user.role === 'admin') { %>
+            <form method="POST" action="/forum/<%= post.id %>/resolve">
+              <button type="submit" class="btn btn-secondary btn-sm">
+                <%= post.is_resolved ? 'Mark as Unsolved' : 'Mark as Solved' %>
+              </button>
+            </form>
+          <% } %>
+          
+          <% if (user.role === 'admin') { %>
+            <form method="POST" action="/forum/<%= post.id %>/pin">
+              <button type="submit" class="btn btn-secondary btn-sm">
+                <%= post.is_pinned ? 'Unpin' : 'Pin' %>
+              </button>
+            </form>
+            <form method="POST" action="/forum/<%= post.id %>?_method=DELETE">
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          <% } %>
+        </div>
+      </div>
+      
+      <h2 style="margin-top: 32px; margin-bottom: 16px;">Replies</h2>
+      
+      <% if (replies.length === 0) { %>
+        <p style="color: var(--text-secondary);">No replies yet. Be the first to respond!</p>
+      <% } else { %>
+        <% replies.forEach(reply => { %>
+          <div class="reply">
+            <div class="reply-header">
+              <div class="reply-author">
+                <%- include('../partials/avatar', {name: reply.author_name, size: 'sm'}) %>
+                <div>
+                  <strong><%= reply.author_name %></strong>
+                  <% if (reply.author_specializations && reply.author_specializations.length > 0) { %>
+                    <% reply.author_specializations.forEach(spec => { %>
+                      <span class="badge badge-sm badge-info" style="margin-left: 4px;"><%= spec %></span>
+                    <% }) %>
+                  <% } %>
+                  <div class="reply-meta"><%= new Date(reply.created_at).toLocaleString() %></div>
+                </div>
+              </div>
+            </div>
+            <div class="reply-content"><%= reply.content %></div>
+            
+            <% if (reply.children && reply.children.length > 0) { %>
+              <% reply.children.forEach(nested => { %>
+                <div class="reply nested" style="margin-top: 12px;">
+                  <div class="reply-header">
+                    <div class="reply-author">
+                      <%- include('../partials/avatar', {name: nested.author_name, size: 'sm'}) %>
+                      <div>
+                        <strong><%= nested.author_name %></strong>
+                        <div class="reply-meta"><%= new Date(nested.created_at).toLocaleString() %></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="reply-content"><%= nested.content %></div>
+                </div>
+              <% }) %>
+            <% } %>
+            
+            <button onclick="showReplyForm(<%= reply.id %>)" class="btn btn-sm btn-secondary" style="margin-top: 12px;">Reply</button>
+            <form id="reply-form-<%= reply.id %>" method="POST" action="/forum/<%= post.id %>/reply" style="display: none; margin-top: 12px;">
+              <input type="hidden" name="parent_reply_id" value="<%= reply.id %>">
+              <textarea name="content" required style="min-height: 80px;"></textarea>
+              <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 8px;">Post Reply</button>
+            </form>
+          </div>
+        <% }) %>
+      <% } %>
+      
+      <h3 style="margin-top: 32px; margin-bottom: 16px;">Post a Reply</h3>
+      <form method="POST" action="/forum/<%= post.id %>/reply">
+        <div class="form-group">
+          <textarea name="content" required style="min-height: 120px;" placeholder="Share your thoughts..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Post Reply</button>
+      </form>
+      
+      <a href="/forum" class="btn btn-secondary" style="margin-top: 24px;">← Back to Forum</a>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

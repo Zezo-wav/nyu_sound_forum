@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container">
+      <%- include('../partials/flash') %>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1>Wiki</h1>
+        <% if (user.role === 'admin') { %>
+          <a href="/wiki/new" class="btn btn-primary">New Page</a>
+        <% } %>
+      </div>
+      
+      <div class="filters">
+        <a href="/wiki" class="btn <%= !currentCategory ? 'btn-primary' : 'btn-secondary' %> btn-sm">All</a>
+        <a href="/wiki?category=production" class="btn <%= currentCategory === 'production' ? 'btn-primary' : 'btn-secondary' %> btn-sm">Production</a>
+        <a href="/wiki?category=post_production" class="btn <%= currentCategory === 'post_production' ? 'btn-primary' : 'btn-secondary' %> btn-sm">Post-Production</a>
+        <a href="/wiki?category=equipment" class="btn <%= currentCategory === 'equipment' ? 'btn-primary' : 'btn-secondary' %> btn-sm">Equipment</a>
+      </div>
+      
+      <% if (pages.length === 0) { %>
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 40px;">No wiki pages yet.</p>
+      <% } else { %>
+        <% pages.forEach(page => { %>
+          <div class="card">
+            <h3 class="card-title"><a href="/wiki/<%= page.slug %>"><%= page.title %></a></h3>
+            <div class="card-meta">
+              <span><%= page.category.replace('_', ' ') %></span>
+              <span>•</span>
+              <span>By <%= page.author_name %></span>
+              <span>•</span>
+              <span><%= new Date(page.created_at).toLocaleDateString() %></span>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

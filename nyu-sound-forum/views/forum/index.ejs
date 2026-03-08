@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container">
+      <%- include('../partials/flash') %>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1>Forum</h1>
+        <a href="/forum/new" class="btn btn-primary">Ask Question</a>
+      </div>
+      
+      <div class="filters">
+        <form method="GET" action="/forum" style="display: flex; gap: 12px; width: 100%; flex-wrap: wrap;">
+          <select name="category" onchange="this.form.submit()">
+            <option value="all" <%= filters.category === 'all' ? 'selected' : '' %>>All Categories</option>
+            <option value="production_sound" <%= filters.category === 'production_sound' ? 'selected' : '' %>>Production Sound</option>
+            <option value="post_sound" <%= filters.category === 'post_sound' ? 'selected' : '' %>>Post Sound</option>
+            <option value="equipment" <%= filters.category === 'equipment' ? 'selected' : '' %>>Equipment</option>
+            <option value="general" <%= filters.category === 'general' ? 'selected' : '' %>>General</option>
+          </select>
+          <select name="sort" onchange="this.form.submit()">
+            <option value="recent_activity" <%= filters.sort === 'recent_activity' ? 'selected' : '' %>>Recent Activity</option>
+            <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Newest</option>
+            <option value="most_replies" <%= filters.sort === 'most_replies' ? 'selected' : '' %>>Most Replies</option>
+            <option value="most_viewed" <%= filters.sort === 'most_viewed' ? 'selected' : '' %>>Most Viewed</option>
+          </select>
+          <select name="resolved" onchange="this.form.submit()">
+            <option value="">All Posts</option>
+            <option value="false" <%= filters.resolved === false ? 'selected' : '' %>>Unsolved Only</option>
+          </select>
+        </form>
+      </div>
+      
+      <% if (posts.length === 0) { %>
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 40px;">No posts found.</p>
+      <% } else { %>
+        <% posts.forEach(post => { %>
+          <div class="card">
+            <div class="card-header">
+              <div style="flex: 1;">
+                <h3 class="card-title">
+                  <% if (post.is_pinned) { %><span class="status-pinned">📌</span> <% } %>
+                  <a href="/forum/<%= post.id %>"><%= post.title %></a>
+                  <% if (post.is_resolved) { %><span class="badge badge-sm" style="background: var(--text-tertiary); color: white; margin-left: 8px;">✓ Resolved</span><% } %>
+                </h3>
+                <div class="card-meta">
+                  <span><%- include('../partials/avatar', {name: post.author_name, size: 'sm'}) %> <%= post.author_name %></span>
+                  <span>•</span>
+                  <span><%= new Date(post.created_at).toLocaleDateString() %></span>
+                  <span>•</span>
+                  <span>💬 <%= post.reply_count %> replies</span>
+                  <span>•</span>
+                  <span>👁️ <%= post.view_count %> views</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer" style="border: none; padding-top: 0;">
+              <div class="card-tags">
+                <span class="badge badge-secondary"><%= post.category.replace('_', ' ') %></span>
+                <% if (post.author_specializations && post.author_specializations.length > 0) { %>
+                  <% post.author_specializations.slice(0, 2).forEach(spec => { %>
+                    <span class="badge badge-sm badge-info"><%= spec %></span>
+                  <% }) %>
+                <% } %>
+              </div>
+              <span class="text-muted" style="font-size: 12px;">Last activity: <%= new Date(post.last_activity_at).toLocaleString() %></span>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

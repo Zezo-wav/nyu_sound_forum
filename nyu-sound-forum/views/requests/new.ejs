@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container" style="max-width: 700px;">
+      <%- include('../partials/flash') %>
+      <h1>Post New Request</h1>
+      <form method="POST" action="/requests">
+        <div class="form-group">
+          <label>Title *</label>
+          <input type="text" name="title" required maxlength="200">
+        </div>
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea name="description" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Position Needed *</label>
+          <select name="position_needed" required>
+            <option value="">Select position</option>
+            <option value="sound_mixer">Sound Mixer</option>
+            <option value="boom_operator">Boom Operator</option>
+            <option value="sound_designer">Sound Designer</option>
+            <option value="dialogue_editor">Dialogue Editor</option>
+            <option value="foley_artist">Foley Artist</option>
+            <option value="adr_engineer">ADR Engineer</option>
+            <option value="mixing_engineer">Mixing Engineer</option>
+            <option value="any_production">Any Production Role</option>
+            <option value="any_post">Any Post-Production Role</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Project Type</label>
+          <input type="text" name="project_type" placeholder="e.g., Thesis Film, Documentary, Student Short">
+        </div>
+        <div class="form-group">
+          <label>Shoot Date (if applicable)</label>
+          <input type="date" name="shoot_date">
+        </div>
+        <div class="form-group">
+          <label>Tags</label>
+          <div class="checkbox-group">
+            <div class="checkbox-item"><input type="checkbox" name="tags" value="urgent"><label>Urgent</label></div>
+            <div class="checkbox-item"><input type="checkbox" name="tags" value="paid"><label>Paid</label></div>
+            <div class="checkbox-item"><input type="checkbox" name="tags" value="student_film"><label>Student Film</label></div>
+            <div class="checkbox-item"><input type="checkbox" name="tags" value="thesis"><label>Thesis</label></div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Post Request</button>
+        <a href="/requests" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>
