@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container" style="max-width: 800px;">
+      <%- include('../partials/flash') %>
+      
+      <div class="card">
+        <h1 class="card-title"><%= wikiPage.title %></h1>
+        <div class="card-meta">
+          <span><%= wikiPage.category.replace('_', ' ') %></span>
+          <span>•</span>
+          <span>Created by <%= wikiPage.author_name %></span>
+          <% if (wikiPage.editor_name && wikiPage.editor_name !== wikiPage.author_name) { %>
+            <span>•</span>
+            <span>Last edited by <%= wikiPage.editor_name %></span>
+          <% } %>
+        </div>
+        
+        <div class="card-content" style="margin-top: 24px;">
+          <%- wikiPage.html %>
+        </div>
+        
+        <% if (user.role === 'admin') { %>
+          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color); display: flex; gap: 12px;">
+            <a href="/wiki/<%= wikiPage.slug %>/edit" class="btn btn-secondary">Edit</a>
+            <form method="POST" action="/wiki/<%= wikiPage.id %>?_method=DELETE">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+      
+      <a href="/wiki" class="btn btn-secondary" style="margin-top: 24px;">← Back to Wiki</a>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

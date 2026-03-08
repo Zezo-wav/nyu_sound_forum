@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container">
+      <%- include('../partials/flash') %>
+      <h1>Admin Dashboard</h1>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value"><%= stats.totalUsers %></div>
+          <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value"><%= stats.totalRequests %></div>
+          <div class="stat-label">Total Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value"><%= stats.openRequests %></div>
+          <div class="stat-label">Open Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value"><%= stats.totalGigs %></div>
+          <div class="stat-label">Sound Gigs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value"><%= stats.openGigs %></div>
+          <div class="stat-label">Open Gigs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value"><%= stats.totalPosts %></div>
+          <div class="stat-label">Forum Posts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value"><%= stats.unresolvedPosts %></div>
+          <div class="stat-label">Unsolved Questions</div>
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 32px;">
+        <div>
+          <h2>Recent Users</h2>
+          <% recentUsers.forEach(u => { %>
+            <div class="card user-card">
+              <%- include('../partials/avatar', {name: u.name, size: 'md'}) %>
+              <div class="user-info">
+                <h4><a href="/users/<%= u.id %>"><%= u.name %></a></h4>
+                <p style="text-transform: capitalize;"><%= u.role.replace('_', ' ') %></p>
+              </div>
+            </div>
+          <% }) %>
+          <a href="/admin/users" class="btn btn-secondary" style="margin-top: 16px;">View All Users</a>
+        </div>
+        
+        <div>
+          <h2>Recent Forum Posts</h2>
+          <% recentPosts.forEach(post => { %>
+            <div class="card">
+              <h4 class="card-title"><a href="/forum/<%= post.id %>"><%= post.title %></a></h4>
+              <div class="card-meta">
+                <span><%= post.author_name %></span>
+                <span>•</span>
+                <span><%= new Date(post.created_at).toLocaleDateString() %></span>
+              </div>
+            </div>
+          <% }) %>
+          <a href="/forum" class="btn btn-secondary" style="margin-top: 16px;">View Forum</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

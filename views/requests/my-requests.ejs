@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container">
+      <%- include('../partials/flash') %>
+      <h1><%= title %></h1>
+      
+      <% if (requests.length === 0) { %>
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 40px;">
+          You haven't <%= type === 'posted' ? 'posted' : 'claimed' %> any requests yet.
+        </p>
+        <div style="text-align: center; margin-top: 24px;">
+          <a href="<%= type === 'posted' ? '/requests/new' : '/requests' %>" class="btn btn-primary">
+            <%= type === 'posted' ? 'Post Request' : 'Browse Requests' %>
+          </a>
+        </div>
+      <% } else { %>
+        <% requests.forEach(request => { %>
+          <div class="card">
+            <h3 class="card-title"><a href="/requests/<%= request.id %>"><%= request.title %></a></h3>
+            <div class="card-meta">
+              <span><%= new Date(request.created_at).toLocaleDateString() %></span>
+              <span>•</span>
+              <span class="<%= request.status === 'open' ? 'status-open' : 'status-claimed' %>">
+                <%= request.status %>
+              </span>
+            </div>
+            <p class="card-content"><%= request.description.substring(0, 150) %>...</p>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

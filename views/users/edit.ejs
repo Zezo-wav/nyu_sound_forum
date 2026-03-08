@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container" style="max-width: 600px;">
+      <%- include('../partials/flash') %>
+      <h1>Edit Profile</h1>
+      
+      <form method="POST" action="/users/<%= profileUser.id %>?_method=PUT">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" name="name" value="<%= profileUser.name %>" required>
+        </div>
+        
+        <% if (profileUser.role === 'sound_student') { %>
+          <div class="form-group">
+            <label>Primary Position *</label>
+            <select name="primary_position" required>
+              <option value="">Select your primary position</option>
+              <option value="Sound Mixer" <%= profileUser.primary_position === 'Sound Mixer' ? 'selected' : '' %>>Sound Mixer</option>
+              <option value="Boom Operator" <%= profileUser.primary_position === 'Boom Operator' ? 'selected' : '' %>>Boom Operator</option>
+              <option value="Sound Designer" <%= profileUser.primary_position === 'Sound Designer' ? 'selected' : '' %>>Sound Designer</option>
+              <option value="Dialogue Editor" <%= profileUser.primary_position === 'Dialogue Editor' ? 'selected' : '' %>>Dialogue Editor</option>
+              <option value="Foley Artist" <%= profileUser.primary_position === 'Foley Artist' ? 'selected' : '' %>>Foley Artist</option>
+              <option value="ADR Engineer" <%= profileUser.primary_position === 'ADR Engineer' ? 'selected' : '' %>>ADR Engineer</option>
+              <option value="Mixing Engineer" <%= profileUser.primary_position === 'Mixing Engineer' ? 'selected' : '' %>>Mixing Engineer</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Secondary Skills (up to 2)</label>
+            <div class="checkbox-group" id="secondarySkills">
+              <div class="checkbox-item">
+                <input type="checkbox" name="specializations" value="Sound Mixer" <%= profileUser.specializations && profileUser.specializations.includes('Sound Mixer') ? 'checked' : '' %>>
+                <label>Sound Mixer</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="specializations" value="Boom Operator" <%= profileUser.specializations && profileUser.specializations.includes('Boom Operator') ? 'checked' : '' %>>
+                <label>Boom Operator</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="specializations" value="Sound Designer" <%= profileUser.specializations && profileUser.specializations.includes('Sound Designer') ? 'checked' : '' %>>
+                <label>Sound Designer</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="specializations" value="Dialogue Editor" <%= profileUser.specializations && profileUser.specializations.includes('Dialogue Editor') ? 'checked' : '' %>>
+                <label>Dialogue Editor</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="specializations" value="Foley Artist" <%= profileUser.specializations && profileUser.specializations.includes('Foley Artist') ? 'checked' : '' %>>
+                <label>Foley Artist</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="specializations" value="ADR Engineer" <%= profileUser.specializations && profileUser.specializations.includes('ADR Engineer') ? 'checked' : '' %>>
+                <label>ADR Engineer</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="specializations" value="Mixing Engineer" <%= profileUser.specializations && profileUser.specializations.includes('Mixing Engineer') ? 'checked' : '' %>>
+                <label>Mixing Engineer</label>
+              </div>
+            </div>
+            <small style="color: var(--text-secondary);">Choose skills beyond your primary position</small>
+          </div>
+        <% } %>
+        
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea name="bio"><%= profileUser.bio || '' %></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Expected Graduation Year</label>
+          <input type="number" name="year" value="<%= profileUser.year || '' %>" min="2024" max="2030">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="/users/<%= profileUser.id %>" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+  <% if (profileUser.role === 'sound_student') { %>
+  <script>
+    // Limit secondary skills to 2
+    const checkboxes = document.querySelectorAll('#secondarySkills input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', function() {
+        const checked = document.querySelectorAll('#secondarySkills input[type="checkbox"]:checked');
+        if (checked.length >= 2) {
+          checkboxes.forEach(box => {
+            if (!box.checked) box.disabled = true;
+          });
+        } else {
+          checkboxes.forEach(box => box.disabled = false);
+        }
+      });
+    });
+  </script>
+  <% } %>
+</body>
+</html>

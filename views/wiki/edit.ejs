@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/nav') %>
+  <main>
+    <div class="container" style="max-width: 800px;">
+      <%- include('../partials/flash') %>
+      <h1><%= wikiPage ? 'Edit Wiki Page' : 'Create Wiki Page' %></h1>
+      
+      <form method="POST" action="<%= wikiPage ? '/wiki/' + wikiPage.id + '?_method=PUT' : '/wiki' %>">
+        <div class="form-group">
+          <label>Title *</label>
+          <input type="text" name="title" required value="<%= wikiPage ? wikiPage.title : '' %>">
+        </div>
+        <div class="form-group">
+          <label>Content (Markdown) *</label>
+          <textarea name="content" required style="min-height: 400px; font-family: 'Courier New', monospace;"><%= wikiPage ? wikiPage.content : '' %></textarea>
+          <small style="color: var(--text-secondary);">Supports Markdown formatting</small>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select name="category" required>
+            <option value="production" <%= wikiPage && wikiPage.category === 'production' ? 'selected' : '' %>>Production</option>
+            <option value="post_production" <%= wikiPage && wikiPage.category === 'post_production' ? 'selected' : '' %>>Post-Production</option>
+            <option value="equipment" <%= wikiPage && wikiPage.category === 'equipment' ? 'selected' : '' %>>Equipment</option>
+            <option value="general" <%= wikiPage && wikiPage.category === 'general' ? 'selected' : '' %>>General</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary"><%= wikiPage ? 'Update' : 'Create' %> Page</button>
+        <a href="<%= wikiPage ? '/wiki/' + wikiPage.slug : '/wiki' %>" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>
